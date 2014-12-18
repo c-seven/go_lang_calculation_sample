@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/csv"
-  "fmt"
+	"fmt"
 	"io"
 	"os"
 	"strconv"
@@ -25,15 +25,15 @@ func validate(records [][]string) {
 }
 
 func main() {
-  if len(os.Args) < 2  {
-     panic("ファイルを指定してください")
-  }
+	if len(os.Args) < 2 {
+		panic("ファイルを指定してください")
+	}
 	file, err := os.Open(os.Args[1])
 
 	noErrorOrPanic(err)
 	defer file.Close()
 
-  reader := csv.NewReader(transform.NewReader(file, japanese.ShiftJIS.NewDecoder()))
+	reader := csv.NewReader(transform.NewReader(file, japanese.ShiftJIS.NewDecoder()))
 
 	var records [][]string
 	for {
@@ -51,7 +51,7 @@ func main() {
 	header, data := records[:1][0], records[1:]
 
 	// 転置
-	var vs [][]float64 = make([][]float64,len(header))
+	var vs [][]float64 = make([][]float64, len(header))
 	for _, row := range data {
 		for col := 0; col < len(header); col++ {
 			if v, err := strconv.ParseFloat(strings.Trim(row[col], " "), 64); err == nil {
@@ -60,18 +60,18 @@ func main() {
 		}
 	}
 
-  output, err := os.Create(file.Name() + ".calc.csv")
-  writer := csv.NewWriter(transform.NewWriter(output, japanese.ShiftJIS.NewEncoder()))
+	output, err := os.Create(file.Name() + ".calc.csv")
+	writer := csv.NewWriter(transform.NewWriter(output, japanese.ShiftJIS.NewEncoder()))
 
-	writer.Write(append(header,"計算結果"))
+	writer.Write(append(header, "計算結果"))
 
-  toStrs := func(nums []float64) []string{
-     ss := []string{}
-     for _, n := range nums{
-       ss = append(ss, fmt.Sprintf("%.4f", n))
-     }
-     return ss
-  }
+	toStrs := func(nums []float64) []string {
+		ss := []string{}
+		for _, n := range nums {
+			ss = append(ss, fmt.Sprintf("%.4f", n))
+		}
+		return ss
+	}
 
 	multipleAll := func(nums []float64) {
 		r := 1.0
@@ -79,13 +79,13 @@ func main() {
 		for _, n := range nums {
 			r = r * n
 		}
-		writer.Write(toStrs(append(nums,r)))
+		writer.Write(toStrs(append(nums, r)))
 	}
 
 	var d []float64
 	walk(vs, d, multipleAll)
 
-  writer.Flush()
+	writer.Flush()
 }
 
 func walk(datas [][]float64, currentDatas []float64, proc func([]float64)) {
