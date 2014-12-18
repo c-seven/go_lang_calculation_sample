@@ -68,7 +68,7 @@ func main() {
   toStrs := func(nums []float64) []string{
      ss := []string{}
      for _, n := range nums{
-       ss = append(ss, fmt.Sprintf("%.2f", n))
+       ss = append(ss, fmt.Sprintf("%.4f", n))
      }
      return ss
   }
