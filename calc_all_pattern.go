@@ -61,6 +61,7 @@ func main() {
 	}
 
 	output, err := os.Create(file.Name() + ".calc.csv")
+	defer output.Close()
 	writer := csv.NewWriter(transform.NewWriter(output, japanese.ShiftJIS.NewEncoder()))
 
 	writer.Write(append(header, "計算結果"))
